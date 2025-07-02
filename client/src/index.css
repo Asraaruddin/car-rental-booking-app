@@ -1,13 +1,16 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&family=Roboto:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,700;1,900&family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap');
-@import "tailwindcss" ;
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&family=Roboto:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,700;1,900&display=swap');
 
-*{
-  font-family: "Roboto", sans-serif;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-primary: #2563EB;
+  --color-primary-dull: #1F58D8;
+  --color-light: #F1F5F9;
+  --color-borderColor: #c4c7d2;
 }
 
-@theme{
-  --color-primary:#2563EB;
-  --color-primary-dull:#1F58D8;
-  --color-light:#F1F5F9;
-  --color-borderColor:#c4c7d2;
+* {
+  font-family: "Roboto", sans-serif;
 }
