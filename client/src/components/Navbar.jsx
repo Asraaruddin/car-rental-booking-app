@@ -13,12 +13,13 @@ const Navbar = ({setShowLogin}) => {
     <div className={`flex items-center justify-between px-6 md:px-16 lg:px-24 xl:px-32 py-4 text-gray-600 border-b border-borderColor relative transition-all
       ${location.pathname === '/' && 'bg-light'} `} >
      
-      <Link to='/'>  
-  <img  src={assets.logo} alt="logo"  className='h-8'  />
-      </Link>
-
-
-
+      
+<Link to='/' className='flex flex-col leading-tight'>
+  <span className='text-xl font-extrabold tracking-wide text-primary italic'>
+    A<span className='text-gray-800'>CarRental</span>
+  </span>
+  <span className='text-[10px] text-gray-500 uppercase tracking-widest'>Drive Your Dream</span>
+</Link>
 
  {/* ✅ Mobile Menu Toggle Button (visible only on small screens) */}
       <button
