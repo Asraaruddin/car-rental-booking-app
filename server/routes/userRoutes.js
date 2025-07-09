@@ -6,6 +6,6 @@ import { Protect } from "../middleware/auth.js";
 
  userRouter.post('/register',registerUser);
  userRouter.post('/login',loginUser);
- userRouter.get('/data',Protect,getUserData)
+ userRouter.get('/data',Protect,getUserData);
 
  export default userRouter;
