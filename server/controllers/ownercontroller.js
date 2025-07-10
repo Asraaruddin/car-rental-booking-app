@@ -1,4 +1,5 @@
 import imagekit from "../configs/imageKit.js";
+import Booking from "../models/Booking.js";
 import Car from "../models/car.js";
 import User from "../models/User.js";
 import fs from "fs"
@@ -130,6 +131,23 @@ try{
 
     }
     const cars = await Car.find({owner:_id})
+    const bookings = await Booking.find({owner:_id}).populate('car').sort({createdAt:-1});
+
+    const pendingBooking = await Booking.find({owner:_id,status:"pending"})
+    const completedBookings = await Booking.find({owner:_id,status:"confirmed"})
+
+    //Calculate monthlyRevenue from booking where status is confirmed
+    const monthlyRevenue = bookings.slice().filter(booking=>booking.status === "confirmed").reduce((acc,booking)=>acc+booking.price,0)
+
+    const dashboardData ={
+        totalCars:cars.length,
+        totalBooking:bookings.length,
+        pendingBookings:pendingBooking.length,
+        completedBookings:completedBookings.length,
+        recentBookings:bookings.slice(0,3),
+        monthlyRevenue
+    }
+    res.json({success:true,dashboardData});
 }
 catch (error) {
         console.log(error.message);
@@ -137,4 +155,36 @@ catch (error) {
         
     }
 
+ }
+//API to update user image
+ export const updateUserImage = async(req,res)=>{
+    try {
+         const{_id} = req.user;
+        const imageFile = req.file;
+    
+        //Upload Image to ImageKit
+        const fileBuffer = fs.readFileSync(imageFile.path)
+         const response = await imagekit.upload({
+            file:fileBuffer,
+            fileName:imageFile.originalname,
+            folder:'/users'
+        })
+        
+
+// optimization through imagekit URL transformation 
+var optimizedImageURL = imagekit.url({
+    path : response.filePath,
+    transformation : [{width:'400'}, //Width resizing
+        {quality:'auto'}, // Auto compresssion
+        {format:'webp'}] // Convert to modern format
+});
+
+const image = optimizedImageURL;
+ await User.findByIdAndUpdate(_id,{image});
+ res.json({success:true,message:"Image Updated"})
+        
+    } catch (error) {
+           console.log(error.message);
+        res.json({success:false,message:error.message})    
+    }
  }

@@ -1,4 +1,4 @@
-import Booking from "../models/Booking"
+import Booking from "../models/Booking.js"
 
 //Function to check Availbility of Car for a given Date
 const checkAvailablity = async(car,pickupDate,returnDate)=>{
@@ -93,6 +93,27 @@ export const getOwnerBookings = async(req,res)=>{
     if(req.user.role !=='owner'){
         return res.json({success:false,message:"Unauthorised"})}
 const bookings = await Booking.find({owner:req.user._id}).populate('car user').select("-user.password").sort({createdAt:-1})
+            res.json({success:true,bookings})
+
+    }
+    catch(error){
+    console.log(error.message);
+    res.json({success:false,message:error.message})
+    }
+}
+
+//API to Change booking status
+export const changeBookingStatus = async(req,res)=>{
+    try{
+   const {_id} = req.body;
+   const {bookingId,status} = req.body
+   const booking = await Booking.findById(bookingId)
+if(booking.owner.toString() !== _id.toString()){
+    return res.json({success:false,message:"Unauthorized"})
+}
+booking.status = status;
+await booking.save();
+
     }
     catch(error){
     console.log(error.message);
