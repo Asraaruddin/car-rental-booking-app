@@ -61,9 +61,11 @@ A Full-Stack Car Rental Booking Application built with the MERN Stack (MongoDB, 
 
 ![My Bookings](https://github.com/Asraaruddin/car-rental-booking-app/blob/1654fe98af9585d77ff5fcd5b66651402581288a/screenshots/my-booking.png)
 
-### 4️⃣ Manage Bookings (Admin/Owner)
 
-![Manage Booking](https://github.com/Asraaruddin/car-rental-booking-app/blob/1654fe98af9585d77ff5fcd5b66651402581288a/screenshots/managebooking.png)
+###  4️⃣ Admin Dashboard (Revenue & Stats)
+
+![Admin Dashboard](https://github.com/Asraaruddin/car-rental-booking-app/blob/1654fe98af9585d77ff5fcd5b66651402581288a/screenshots/admin-dashboard.png)
+
 
 ### 5️⃣ Add New Car (Admin/Owner)
 
@@ -73,9 +75,13 @@ A Full-Stack Car Rental Booking Application built with the MERN Stack (MongoDB, 
 
 ![Manage Cars](https://github.com/Asraaruddin/car-rental-booking-app/blob/1654fe98af9585d77ff5fcd5b66651402581288a/screenshots/managecars.png)
 
-### 7️⃣ Admin Dashboard (Revenue & Stats)
 
-![Admin Dashboard](https://github.com/Asraaruddin/car-rental-booking-app/blob/1654fe98af9585d77ff5fcd5b66651402581288a/screenshots/admin-dashboard.png)
+###7️⃣ Manage Bookings (Admin/Owner)
+
+![Manage Booking](https://github.com/Asraaruddin/car-rental-booking-app/blob/1654fe98af9585d77ff5fcd5b66651402581288a/screenshots/managebooking.png)
+
+
+
 
 ---
 **Project Structure**
