@@ -1,27 +1,66 @@
-import React, { useState } from 'react';
+import React, { useState,useRef } from 'react';
 import { assets, menuLinks } from '../assets/assets';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useAppContext } from '../context/AppContext';
+import toast from 'react-hot-toast';
+import { motion } from 'motion/react';
 
 
-const Navbar = ({setShowLogin}) => {
+
+const Navbar = () => {
+
+  const {setShowLogin,user,logout,isOwner,axios,setIsOwner}=useAppContext()
   const location = useLocation();
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
 
+
+  const changeRole = async ()=>{
+    try {
+     const {data} = await axios.post('/api/owner/change-role')
+      if(data.success){
+        setIsOwner(true)
+        toast.success(data.message)
+      }
+      else{
+        toast.error(data.message)
+      }
+    } catch (error) {
+              toast.error(error.message)
+
+      
+    }
+  }
+ 
+
+  
+
+
   return (
     
-    <div className={`flex items-center justify-between px-6 md:px-16 lg:px-24 xl:px-32 py-4 text-gray-600 border-b border-borderColor relative z-20  transition-all
+    <motion.div
+    initial={{y:-20,opacity:0}}
+    animate={{y:0,opacity:1}}
+    transition={{duration:0.5}}
+
+    className={`flex items-center justify-between px-6 md:px-16 lg:px-24 xl:px-32 py-4 text-gray-600 border-b border-borderColor relative z-20  transition-all
       ${location.pathname === '/' && 'bg-light'} `} >
      
-      
-<Link to='/' className='flex flex-col leading-tight'>
-  <span className='text-xl font-extrabold tracking-wide text-primary italic'>
-    A<span className='text-gray-800'>CarRental</span>
-  </span>
-  <span className='text-[10px] text-gray-500 uppercase tracking-widest'>Drive Your Dream</span>
-</Link>
+  <motion.div
+  whileHover={{ scale: 1.1 }}
+  transition={{ type: 'spring', stiffness: 300 }}
+>
+  <Link to='/' className='flex flex-col leading-tight cursor-pointer'>
+    <span className='text-xl font-extrabold tracking-wide text-primary italic'>
+      A<span className='text-gray-800'>CarRental</span>
+    </span>
+    <span className='text-[10px] text-gray-500 uppercase tracking-widest'>
+      Drive Your Dream
+    </span>
+  </Link>
+</motion.div>
 
- {/* ✅ Mobile Menu Toggle Button (visible only on small screens) */}
+ {/*  Mobile Menu Toggle Button (visible only on small screens) */}
       <button
         className='sm:hidden cursor-pointer z-50'
         aria-label='Toggle Menu'
@@ -53,13 +92,13 @@ const Navbar = ({setShowLogin}) => {
       </div>
 
       <div className='flex max-sm:flex-col items-start sm:items-center gap-6'>
-        <button onClick={()=>navigate('./owner')} className='cursor-pointer'>Dashboard</button>
-        <button  onClick={()=> setShowLogin(true)} className='cursor-pointer px-8 py-2 bg-primary hover:bg-primary-dull transition-all text-white rounded-lg'>Login</button>
+        <button onClick={()=>isOwner ?  navigate('./owner') : changeRole() } className='cursor-pointer'>{ isOwner ? 'Dashboard' : 'List cars'}</button>
+        <button  onClick={()=>{user ? logout() : setShowLogin(true)}} className='cursor-pointer px-8 py-2 bg-primary hover:bg-primary-dull transition-all text-white rounded-lg'>{ user ? 'Logout' : 'Login'}</button>
       </div>
 
     
     </div>
-    </div>
+    </motion.div>
   );
 };
 

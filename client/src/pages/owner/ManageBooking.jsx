@@ -1,24 +1,51 @@
 import React, { useEffect, useState } from 'react'
-import { dummyMyBookingsData } from '../../assets/assets'
 import Title from '../../components/owner/Title'
+import { useAppContext } from '../../context/AppContext'
+import toast from 'react-hot-toast'
 
 const ManageBooking = () => {
-  const currency = import.meta.env.VITE_CURRENCY
-  const [bookings,setBooking] = useState([])
+
+  const {axios,currency} = useAppContext()
+
+  const [bookings,setBookings] = useState([])
 
   const fetchOwnerBookings = async () =>{
-    setBooking(dummyMyBookingsData)
+try {
+  const {data} = await axios.get('/api/bookings/owner')
+  data.success ? setBookings(data.bookings) : toast.error(data.message)
+  
+} catch (error) {
+  toast.error(error.message)
+}
   }
+
+  const changeBookingStatus = async (bookingId, status) =>{
+try {
+  const {data} = await axios.post('/api/bookings/change-status',{bookingId,status});
+  if(data.success){
+    toast.success(data.message)
+    fetchOwnerBookings()
+  }
+  else{
+    toast.error(data.message)
+  }
+  
+} catch (error) {
+  toast.error(error.message)
+}
+  }
+
+
   useEffect(()=>{
     fetchOwnerBookings()
   },[])
+
   return (
     <div className='px-4 pt-10 md:px-10 w-full'>
 <Title 
   title="Manage Bookings" 
   subTitle="Track, update, and manage all customer bookings seamlessly from a single dashboard." 
 />
-
       <div className='max-w-3xl w-full rounded-md overflow-hidden border border-borderColor mt-6'>
         <table className='w-full border-collapse text-left text-sm text-gray-'>
           <thead className='text-gray-500'>
@@ -46,10 +73,10 @@ const ManageBooking = () => {
                 </td>
                 <td>
                   {booking.status === 'pending' ? (
-                    <select value={booking.status} className='px-2 py-1.5 mt-1 text-gray-500 border borderColor rounded-md outline-none'>
-                      <option value="Pending">Pending</option>
-                      <option value="Cancelled">Cancelled</option>
-                      <option value="Confirmed">Confirmed</option>
+                    <select onChange={e=>changeBookingStatus(booking._id,e.target.value)} value={booking.status} className='px-2 py-1.5 mt-1 text-gray-500 border borderColor rounded-md outline-none'>
+                      <option value="pending">Pending</option>
+                      <option value="cancelled">Cancelled</option>
+                      <option value="confirmed">Confirmed</option>
                     </select>
                   ): (
                     <span className={`px-3 py-1 rounded-full text-xs font-semibold ${booking.status === 'confirmed' ? 'bg-green-100 text-green-500' : 'bg-red-100 text-red-500'}`}>
