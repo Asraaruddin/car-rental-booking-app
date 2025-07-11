@@ -76,7 +76,7 @@ res.json({success:true,message:"Car Added"})
     try {
         const {_id} = req.user;
         const {carId} = req.body
-        const car = await Car.findById({carId})
+        const car = await Car.findById(carId)
 
         //Checking is car belong to the user
       if(car.owner.toString() !== _id.toString()){
@@ -100,7 +100,7 @@ res.json({success:true,message:"Car Added"})
     try {
         const {_id} = req.user;
         const {carId} = req.body
-        const car = await Car.findById({carId})
+        const car = await Car.findById(carId)
 
         //Checking is car belong to the user
       if(car.owner.toString() !== _id.toString()){
@@ -120,42 +120,46 @@ res.json({success:true,message:"Car Added"})
         
     }
  } 
+ 
 
- //API to get  Dahboard Data 
- export const getDashboardData = async (req,res)=>{
-try{
-    const {_id, role} = req.user;
 
-    if(role !== 'owner'){
-        return res.json({success:false,message:"Unauthorized"})
+ export const getDashboardData = async (req, res) => {
+  try {
+    const { _id, role } = req.user;
 
-    }
-    const cars = await Car.find({owner:_id})
-    const bookings = await Booking.find({owner:_id}).populate('car').sort({createdAt:-1});
-
-    const pendingBooking = await Booking.find({owner:_id,status:"pending"})
-    const completedBookings = await Booking.find({owner:_id,status:"confirmed"})
-
-    //Calculate monthlyRevenue from booking where status is confirmed
-    const monthlyRevenue = bookings.slice().filter(booking=>booking.status === "confirmed").reduce((acc,booking)=>acc+booking.price,0)
-
-    const dashboardData ={
-        totalCars:cars.length,
-        totalBooking:bookings.length,
-        pendingBookings:pendingBooking.length,
-        completedBookings:completedBookings.length,
-        recentBookings:bookings.slice(0,3),
-        monthlyRevenue
-    }
-    res.json({success:true,dashboardData});
-}
-catch (error) {
-        console.log(error.message);
-        res.json({success:false,message:error.message})
-        
+    if (role !== 'owner') {
+      return res.json({ success: false, message: "Unauthorized" });
     }
 
- }
+    const cars = await Car.find({ owner: _id });
+    const bookings = await Booking.find({ owner: _id }).populate('car').sort({ createdAt: -1 });
+
+    const totalBookings = bookings.length;
+    const pendingBookings = bookings.filter(booking => booking.status === "pending").length;
+    const completedBookings = bookings.filter(booking => booking.status === "confirmed").length;
+    const recentBookings = bookings.slice(0, 3);
+
+    const monthlyRevenue = bookings
+      .filter(booking => booking.status === "confirmed")
+      .reduce((acc, booking) => acc + booking.price, 0);
+
+    const dashboardData = {
+      totalCars: cars.length,
+      totalBookings,          // ✅ fixed spelling
+      pendingBookings,
+      completedBookings,
+      recentBookings,
+      monthlyRevenue,
+    };
+
+    res.json({ success: true, dashboardData });
+
+  } catch (error) {
+    console.log(error.message);
+    res.json({ success: false, message: error.message });
+  }
+};
+
 //API to update user image
  export const updateUserImage = async(req,res)=>{
     try {

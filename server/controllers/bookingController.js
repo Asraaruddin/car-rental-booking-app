@@ -1,4 +1,5 @@
 import Booking from "../models/Booking.js"
+import Car from "../models/car.js"
 
 //Function to check Availbility of Car for a given Date
 const checkAvailablity = async(car,pickupDate,returnDate)=>{
@@ -38,7 +39,7 @@ export const checkAvailablityofCar = async(req,res)=>{
 
 //API to CREATE bOOKING
 
-export const createBooking = async()=>{
+export const createBooking = async(req,res)=>{
 try{
     const {_id} = req.user;
     const{car,pickupDate,returnDate} = req.body;
@@ -77,7 +78,6 @@ export const getUserBookings = async(req,res)=>{
             res.json({success:true,bookings})
 
 
-
     }
     catch(error){
     console.log(error.message);
@@ -105,15 +105,15 @@ const bookings = await Booking.find({owner:req.user._id}).populate('car user').s
 //API to Change booking status
 export const changeBookingStatus = async(req,res)=>{
     try{
-   const {_id} = req.body;
    const {bookingId,status} = req.body
+   const ownerId = req.user._id;
    const booking = await Booking.findById(bookingId)
-if(booking.owner.toString() !== _id.toString()){
+if(booking.owner.toString() !== ownerId.toString()){
     return res.json({success:false,message:"Unauthorized"})
 }
 booking.status = status;
 await booking.save();
-
+res.json({ success: true, message: "Booking status updated" });
     }
     catch(error){
     console.log(error.message);

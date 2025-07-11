@@ -7,7 +7,7 @@ const ownerRouter = express.Router();
 
 ownerRouter.post("/change-role",Protect,changeRoleToOwner)
 ownerRouter.post("/add-car",upload.single("image"),Protect,addCar)
-ownerRouter.post("/cars",Protect,getOwnerCars)
+ownerRouter.get("/cars",Protect,getOwnerCars)
 ownerRouter.post("/toggle-car",Protect,toggleCarAvailability)
 ownerRouter.post("/delete-car",Protect,deleteCar)
 
