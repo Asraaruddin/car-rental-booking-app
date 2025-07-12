@@ -12,16 +12,25 @@ const app = express();
 // Connect Database
 await connectDB();
 
-// CORS Configuration
+
 const allowedOrigins = [
-  'https://luxcarrental.vercel.app',  //  Your frontend live domain
-  'https://luxride-sand.vercel.app'   //  If sometimes frontend may call from here too
+  'https://luxcarrental.vercel.app',   // ✅ Your official frontend (deployed)
+  'http://localhost:5173'              // ✅ For local development (Vite default)
 ];
 
 app.use(cors({
-  origin: allowedOrigins,
-  credentials: true,   // Important if you're using cookies or sessions
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      console.log("❌ Blocked Origin:", origin);
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true
 }));
+
+
 
 app.use(express.json());
 
