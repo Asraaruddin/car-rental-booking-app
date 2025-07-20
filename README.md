@@ -1,4 +1,4 @@
-# LuxCarRental 🚗
+# LuxCarRental  🚗
 A Full-Stack Car Rental Booking Application built with the MERN Stack (MongoDB, Express.js, React.js, Node.js). This application allows users to browse cars, book vehicles, and manage bookings while offering car owners an intuitive dashboard to manage their listings.
 
 [Live Demo 🌐](https://luxcarrental.vercel.app/)
